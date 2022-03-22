@@ -1,4 +1,21 @@
-#define _XOPEN_SOURCE 700
+/*
+ * collect.c - collect contents of stdin before writing them out
+ *
+ * Copyright (C) 2022 Avalon Williams
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,6 +26,7 @@
 
 #include "config.h"
 
+static void usage();
 static void collect();
 static void pbufs(int o);
 static void cleanup();
@@ -17,6 +35,14 @@ static void die(const char *fn);
 static int tf = -1;
 static char buf[MEMMAX];
 static char *bptr = buf;
+static char *prog;
+
+void
+usage()
+{
+	fprintf(stderr, "usage: %s [-a] file\n", prog);
+	exit(1);
+}
 
 void
 collect()
@@ -84,7 +110,7 @@ cleanup()
 void
 die(const char *fn)
 {
-	fprintf(stderr, "collect: %s: %s\n", fn, strerror(errno));
+	fprintf(stderr, "%s: %s: %s\n", prog, fn, strerror(errno));
 
 	if (!strncmp(fn, "mkstemp", strlen("mkstemp")))
 		cleanup();
@@ -95,12 +121,31 @@ die(const char *fn)
 int
 main(int argc, char **argv)
 {
+	int f = O_WRONLY|O_CREAT;
 	int o = 1;
+	int opt;
 
-	if (argc > 1) {
-		if ((o = open(argv[1], O_WRONLY|O_CREAT)) < 0) {
-			fprintf(stderr, "collect: %s: %s\n",
-			             argv[1], strerror(errno));
+	prog = argv[0];
+
+	while ((opt = getopt(argc, argv, "a")) != -1) {
+		switch(opt) {
+			case 'a':
+				f |= O_APPEND;
+				break;
+			case '?':
+				usage();
+				break;
+		}
+	}
+
+	/* only accept one argument for output */
+	if (optind + 1 < argc)
+		usage();
+
+	if (optind < argc) {
+		if ((o = open(argv[optind], f, 0666)) < 0) {
+			fprintf(stderr, "%s: %s: %s\n",
+			             prog, argv[optind], strerror(errno));
 			return errno;
 		}
 	}

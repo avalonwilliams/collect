@@ -1,0 +1,31 @@
+.Dd March 21, 2022
+.Dt COLLECT 1
+.Os
+.Sh NAME
+.Nm collect
+.Nd collect contents of stdin before writing them to a file
+.Sh SYNOPSIS
+.Nm
+.Op Fl a
+.Op file
+.Sh DESCRIPTION
+The
+.Nm
+utility collects input in memory, and, if the collected
+input is sufficently large, it will begin writing collected input
+to a temporary file. This is useful for making shell pipelines that can
+read from and write to the same file.
+.Sh SEE ALSO
+.Xr sponge 1 ,
+.Xr tee 1
+.Sh AUTHORS
+.Nm
+was written by
+.An Avalon Williams Aq Mt avalonwilliams@protonmail.com
+
+.SH COPYRIGHT
+
+Coping and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved. This file is offered as-is,
+without any warranty.
