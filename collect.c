@@ -127,7 +127,7 @@ main(int argc, char **argv)
 
 	prog = argv[0];
 
-	while ((opt = getopt(argc, argv, "a")) != -1) {
+	while ((opt = getopt(argc, argv, ":a")) != -1) {
 		switch(opt) {
 			case 'a':
 				f |= O_APPEND;
