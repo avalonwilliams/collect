@@ -1,2 +1,4 @@
 *.o
-collect
+/collect
+/.ccls-cache
+/compile_commands.json
