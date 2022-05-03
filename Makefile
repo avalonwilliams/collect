@@ -19,7 +19,7 @@ $(BIN): $(OBJ) $(INC)
 clean:
 	rm -f $(OBJ) $(BIN)
 
-install:
+install: $(BIN)
 	install -d $(DESTDIR)$(PREFIX)/bin
 	install -m 755 $(BIN) $(DESTDIR)$(PREFIX)/bin
 	install -d $(DESTDIR)$(PREFIX)/share/doc/collect
