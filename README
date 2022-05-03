@@ -6,5 +6,5 @@ pipelines that read from and write to the same file.
 Works similarly to sponge from moreutils, though the internal code is much simpler
 than the moreutils equivalent.
 
-I wrote this because plan9port's sed command doesn't have a -i option, though
-it can be useful in a number of other places as well.
+I wrote this because plan9port's sed command doesn't have a -i option, (and I wasn't
+aware of sponge at the time), though it can be useful in a number of other places as well.
